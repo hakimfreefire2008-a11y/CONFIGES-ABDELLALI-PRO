@@ -1,0 +1,62 @@
+{
+"update":"2026-08-01 02:00",
+
+"servers":[
+
+{
+"type":"SSH",
+"country":"🇲🇦 Morocco",
+"ping":35,
+"speed":"1Gbps",
+"expire":"30 Days",
+"config":"ssh://example-morocco"
+},
+
+
+{
+"type":"VLESS",
+"country":"🇩🇪 Germany",
+"ping":55,
+"speed":"800Mbps",
+"expire":"25 Days",
+"config":"vless://example-germany"
+},
+
+
+{
+"type":"VMESS",
+"country":"🇺🇸 USA",
+"ping":80,
+"speed":"500Mbps",
+"expire":"20 Days",
+"config":"vmess://example"
+},
+
+
+{
+"type":"UDP",
+"country":"🇫🇷 France",
+"ping":45,
+"speed":"900Mbps",
+"expire":"15 Days",
+"config":"udp://example"
+}
+
+],
+
+
+"hc":[
+
+{
+"name":"Morocco Premium.hc",
+"url":"files/morocco.hc"
+},
+
+{
+"name":"Germany Fast.hc",
+"url":"files/germany.hc"
+}
+
+]
+
+}
