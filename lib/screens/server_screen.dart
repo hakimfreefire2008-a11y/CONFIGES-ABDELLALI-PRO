@@ -1,18 +1,40 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
 
 
-class ServerScreen extends StatelessWidget {
+class ServerScreen extends StatefulWidget {
 
   final String type;
 
-
   const ServerScreen({
-
     super.key,
-
     required this.type,
-
   });
+
+
+  @override
+  State<ServerScreen> createState() =>
+      _ServerScreenState();
+
+}
+
+
+
+class _ServerScreenState extends State<ServerScreen> {
+
+
+  late Future<Map<String,dynamic>> servers;
+
+
+  @override
+  void initState() {
+
+    super.initState();
+
+    servers = ApiService.getServers();
+
+  }
+
 
 
   @override
@@ -23,100 +45,127 @@ class ServerScreen extends StatelessWidget {
 
       appBar: AppBar(
 
-        title: Text(type),
+        title: Text(widget.type),
 
       ),
 
 
-      body: ListView(
 
-        padding: const EdgeInsets.all(15),
+      body: FutureBuilder<Map<String,dynamic>>(
 
-
-        children: [
+        future: servers,
 
 
-          Card(
+        builder:(context,snapshot){
 
-            child: ListTile(
 
-              leading: const Icon(
-                Icons.flag,
+          if(snapshot.connectionState ==
+              ConnectionState.waiting){
+
+            return const Center(
+              child:CircularProgressIndicator(),
+            );
+
+          }
+
+
+
+          if(snapshot.hasError){
+
+            return Center(
+
+              child:Text(
+                "خطأ في تحميل السيرفرات",
               ),
 
+            );
 
-              title: const Text(
-                "Morocco Server",
-              ),
+          }
 
 
-              subtitle: const Text(
-                """
-Host: example.com
-Port: 443
-Ping: 30ms
-Speed: 1Gbps
-Expire: 2026-12-31
+
+          final key =
+          widget.type
+              .toLowerCase()
+              .replaceAll(" ", "");
+
+
+          final data =
+          snapshot.data![key] ?? [];
+
+
+
+          return ListView.builder(
+
+            padding:
+            const EdgeInsets.all(12),
+
+
+            itemCount:data.length,
+
+
+            itemBuilder:(context,index){
+
+
+              final server =
+              data[index];
+
+
+              return Card(
+
+                child:ListTile(
+
+
+                  leading:
+                  const Icon(
+                    Icons.flag,
+                  ),
+
+
+                  title:
+                  Text(
+                    server["country"] ?? "",
+                  ),
+
+
+
+                  subtitle:Text(
+
+                    """
+Host: ${server["host"]}
+Port: ${server["port"]}
+Ping: ${server["ping"]}
+Speed: ${server["speed"]}
+Expire: ${server["expire"]}
 """,
-              ),
+
+                  ),
 
 
-              trailing: IconButton(
+                  trailing:
+                  IconButton(
 
-                icon: const Icon(
-                  Icons.copy,
+                    icon:
+                    const Icon(
+                      Icons.copy,
+                    ),
+
+                    onPressed:(){},
+
+                  ),
+
                 ),
 
-                onPressed: () {},
-
-              ),
-
-            ),
-
-          ),
+              );
 
 
+            },
 
-          Card(
-
-            child: ListTile(
-
-              leading: const Icon(
-                Icons.flag,
-              ),
+          );
 
 
-              title: const Text(
-                "France Server",
-              ),
+        },
 
-
-              subtitle: const Text(
-                """
-Host: fr.example.com
-Port: 443
-Ping: 45ms
-Speed: 10Gbps
-Expire: 2026-12-31
-""",
-              ),
-
-              trailing: IconButton(
-
-                icon: const Icon(
-                  Icons.copy,
-                ),
-
-                onPressed: () {},
-
-              ),
-
-            ),
-
-          ),
-
-
-        ],
 
       ),
 
