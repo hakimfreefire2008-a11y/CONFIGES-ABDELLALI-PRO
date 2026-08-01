@@ -1,0 +1,31 @@
+{
+  "ssh": [
+    {
+      "country": "Morocco",
+      "host": "ssh.example.com",
+      "port": "443",
+      "ping": "25ms",
+      "speed": "1Gbps",
+      "expire": "2026-12-31"
+    }
+  ],
+
+  "vless": [
+    {
+      "country": "France",
+      "host": "fr.example.com",
+      "port": "443",
+      "ping": "35ms",
+      "speed": "10Gbps",
+      "expire": "2026-12-31"
+    }
+  ],
+
+  "vmess": [],
+
+  "trojan": [],
+
+  "slowdns": [],
+
+  "udp": []
+}
