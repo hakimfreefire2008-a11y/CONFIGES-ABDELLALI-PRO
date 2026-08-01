@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Config Morocco 01",
+    "country": "Morocco",
+    "size": "5 KB",
+    "url": "https://example.com/config01.hc"
+  },
+  {
+    "name": "Config France 01",
+    "country": "France",
+    "size": "6 KB",
+    "url": "https://example.com/config02.hc"
+  }
+]
