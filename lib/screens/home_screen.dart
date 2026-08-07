@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/server_card.dart';
+import 'create_config_screen.dart';
+import 'configs_screen.dart';
 import 'server_screen.dart';
 import 'hc_files_screen.dart';
 import 'help_screen.dart';
@@ -14,153 +15,191 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final servers = [
-      {
-        "name":"SSH / SSL / TLS",
-        "icon":Icons.security,
-      },
-
-      {
-        "name":"VLESS",
-        "icon":Icons.vpn_key,
-      },
-
-      {
-        "name":"VMESS",
-        "icon":Icons.cloud,
-      },
-
-      {
-        "name":"TROJAN",
-        "icon":Icons.lock,
-      },
-
-      {
-        "name":"SLOW DNS",
-        "icon":Icons.speed,
-      },
-
-      {
-        "name":"UDP CUSTOM",
-        "icon":Icons.network_check,
-      },
-    ];
-
 
     return Scaffold(
 
+
       appBar: AppBar(
+
         title: const Text(
-          "CONFIGES ABDELLALI PRO",
+          "CONFIGES ABDELLALI PRO"
         ),
+
+        centerTitle: true,
+
       ),
 
 
-      drawer: Drawer(
+
+      body: Padding(
+
+        padding:
+        const EdgeInsets.all(16),
+
 
         child: ListView(
 
+
           children: [
 
-            const DrawerHeader(
-              child: Center(
-                child: Text(
-                  "CONFIGES\nABDELLALI PRO",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize:22,
-                    fontWeight:FontWeight.bold,
-                  ),
-                ),
-              ),
+
+            _card(
+
+              context,
+
+              "➕ Create Config",
+
+              const CreateConfigScreen(),
+
             ),
 
 
-            ListTile(
-              leading:const Icon(Icons.file_download),
-              title:const Text("HTTP CUSTOM FILES"),
-              onTap:(){
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:(context)=>const HcFilesScreen(),
-                  ),
-                );
+            _card(
 
-              },
+              context,
+
+              "📁 My Configs",
+
+              const ConfigsScreen(),
+
             ),
 
 
-            ListTile(
-              leading:const Icon(Icons.help),
-              title:const Text("المساعدة"),
-              onTap:(){
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:(context)=>const HelpScreen(),
-                  ),
-                );
+            _card(
 
-              },
+              context,
+
+              "🌐 Servers",
+
+              const ServerScreen(),
+
             ),
+
+
+
+            _card(
+
+              context,
+
+              "📂 HC Files",
+
+              const HcFilesScreen(),
+
+            ),
+
+
+
+            _card(
+
+              context,
+
+              "❓ Help",
+
+              const HelpScreen(),
+
+            ),
+
+
 
           ],
+
+
         ),
+
+
       ),
 
 
-      body: GridView.builder(
+    );
 
-        padding:const EdgeInsets.all(12),
 
-        gridDelegate:
-        const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount:2,
-          crossAxisSpacing:12,
-          mainAxisSpacing:12,
+  }
+
+
+
+
+  Widget _card(
+
+      BuildContext context,
+
+      String title,
+
+      Widget page
+
+      ){
+
+
+
+    return Container(
+
+
+      margin:
+      const EdgeInsets.only(
+        bottom:15
+      ),
+
+
+
+      child: ElevatedButton(
+
+
+        style:
+        ElevatedButton.styleFrom(
+
+
+          padding:
+          const EdgeInsets.all(22),
+
+
         ),
 
 
-        itemCount:servers.length,
+
+        onPressed:(){
 
 
-        itemBuilder:(context,index){
+          Navigator.push(
 
-          return ServerCard(
+            context,
 
-            title:servers[index]["name"].toString(),
+            MaterialPageRoute(
 
-            icon:servers[index]["icon"] as IconData,
+              builder:(context)=>page,
 
-
-            onTap:(){
-
-              Navigator.push(
-
-                context,
-
-                MaterialPageRoute(
-
-                  builder:(context)=>
-                  ServerScreen(
-                    type:servers[index]["name"].toString(),
-                  ),
-
-                ),
-
-              );
-
-            },
+            ),
 
           );
 
+
         },
+
+
+
+        child:Text(
+
+          title,
+
+          style:
+          const TextStyle(
+
+            fontSize:18,
+
+          ),
+
+        ),
+
+
 
       ),
 
+
     );
+
+
   }
+
+
+
 }
