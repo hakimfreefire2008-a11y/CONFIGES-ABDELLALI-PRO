@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/config.dart';
+import '../services/storage_service.dart';
 
 
 class ConfigsScreen extends StatefulWidget {
@@ -22,6 +23,39 @@ class _ConfigsScreenState
   List<ConfigModel> configs = [];
 
 
+  @override
+  void initState() {
+
+    super.initState();
+
+    load();
+
+  }
+
+
+
+  Future<void> load() async {
+
+    configs =
+    await StorageService.loadConfigs();
+
+    setState(() {});
+
+  }
+
+
+
+  Future<void> delete(int index) async {
+
+    configs.removeAt(index);
+
+    await StorageService.saveConfigs(configs);
+
+    setState(() {});
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,33 +73,26 @@ class _ConfigsScreenState
       ),
 
 
-
       body:
 
-
       configs.isEmpty
-
 
       ?
 
       const Center(
 
-        child: Text(
+        child:
 
-          "No Configs Yet",
-
-          style:
-          TextStyle(
-            fontSize:20
-          ),
-
+        Text(
+          "No Configs Yet"
         ),
 
       )
 
 
+      :
 
-      : ListView.builder(
+      ListView.builder(
 
         itemCount:
         configs.length,
@@ -75,15 +102,14 @@ class _ConfigsScreenState
         (context,index){
 
 
-          final config =
+          final c =
           configs[index];
-
 
 
           return Card(
 
             margin:
-            const EdgeInsets.all(12),
+            const EdgeInsets.all(10),
 
 
             child:
@@ -92,27 +118,31 @@ class _ConfigsScreenState
 
               title:
               Text(
-                config.name
+                c.name
               ),
-
 
 
               subtitle:
               Text(
-
-                "${config.type}\n🟢 Online",
-
+                "${c.type}\n🟢 Online"
               ),
-
 
 
               trailing:
               PopupMenuButton(
 
+                onSelected:(v){
 
-                itemBuilder:
-                (context)=>[
+                  if(v=="delete"){
 
+                    delete(index);
+
+                  }
+
+                },
+
+
+                itemBuilder:(context)=>[
 
                   const PopupMenuItem(
 
@@ -152,35 +182,10 @@ class _ConfigsScreenState
 
                 ],
 
-
-                onSelected:
-                (value){
-
-
-                  if(value=="delete"){
-
-
-                    setState((){
-
-
-                      configs.removeAt(index);
-
-
-                    });
-
-
-                  }
-
-
-                },
-
-
               ),
 
 
-
             ),
-
 
           );
 
@@ -191,11 +196,9 @@ class _ConfigsScreenState
       ),
 
 
-
     );
 
 
   }
-
 
 }

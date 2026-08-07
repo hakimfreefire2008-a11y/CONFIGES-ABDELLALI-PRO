@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../models/config.dart';
+import '../services/storage_service.dart';
 
 
 class CreateConfigScreen extends StatefulWidget {
 
   const CreateConfigScreen({super.key});
-
 
   @override
   State<CreateConfigScreen> createState() =>
@@ -19,25 +19,156 @@ class _CreateConfigScreenState
     extends State<CreateConfigScreen> {
 
 
-  final nameController = TextEditingController();
-  final hostController = TextEditingController();
-  final portController = TextEditingController();
+  final name =
+  TextEditingController();
 
-  final userController = TextEditingController();
-  final passController = TextEditingController();
+  final host =
+  TextEditingController();
 
-  final sniController = TextEditingController();
+  final port =
+  TextEditingController();
 
-  final payloadController = TextEditingController();
+  final username =
+  TextEditingController();
 
-  final proxyController = TextEditingController();
+  final password =
+  TextEditingController();
+
+  final sni =
+  TextEditingController();
+
+  final payloadText =
+  TextEditingController();
+
+  final proxyText =
+  TextEditingController();
+
 
 
   String type = "SSH";
 
-
   bool payload = false;
+
   bool proxy = false;
+
+
+
+  Future<void> save() async {
+
+
+    ConfigModel config =
+    ConfigModel(
+
+      id:
+      DateTime.now()
+      .millisecondsSinceEpoch
+      .toString(),
+
+
+      name:
+      name.text,
+
+
+      type:
+      type,
+
+
+      host:
+      host.text,
+
+
+      port:
+      port.text,
+
+
+      username:
+      username.text,
+
+
+      password:
+      password.text,
+
+
+      sni:
+      sni.text,
+
+
+      payloadEnabled:
+      payload,
+
+
+      payload:
+      payloadText.text,
+
+
+      proxyEnabled:
+      proxy,
+
+
+      proxy:
+      proxyText.text,
+
+
+      createdAt:
+      DateTime.now(),
+
+    );
+
+
+
+    List<ConfigModel> list =
+    await StorageService.loadConfigs();
+
+
+    list.add(config);
+
+
+    await StorageService.saveConfigs(list);
+
+
+
+    Navigator.pop(context);
+
+
+  }
+
+
+
+
+
+  Widget field(
+      TextEditingController c,
+      String title
+      ){
+
+    return Padding(
+
+      padding:
+      const EdgeInsets.only(bottom:12),
+
+      child:
+
+      TextField(
+
+        controller:c,
+
+        decoration:
+        InputDecoration(
+
+          labelText:title,
+
+          border:
+          const OutlineInputBorder(),
+
+        ),
+
+      ),
+
+    );
+
+  }
+
+
 
 
 
@@ -47,47 +178,44 @@ class _CreateConfigScreenState
 
     return Scaffold(
 
-      appBar: AppBar(
-        title: const Text(
+      appBar:
+      AppBar(
+
+        title:
+        const Text(
           "Create Config"
         ),
+
       ),
 
 
-      body: Padding(
 
-        padding: const EdgeInsets.all(16),
+      body:
+      Padding(
 
-        child: ListView(
+        padding:
+        const EdgeInsets.all(16),
 
-          children: [
+
+        child:
+        ListView(
 
 
-            TextField(
+          children:[
 
-              controller:nameController,
 
-              decoration: const InputDecoration(
-
-                labelText:"Config Name",
-
-                border:
-                OutlineInputBorder(),
-
-              ),
-
+            field(
+              name,
+              "Config Name"
             ),
-
-
-            const SizedBox(height:15),
-
 
 
             DropdownButtonFormField(
 
               value:type,
 
-              decoration: const InputDecoration(
+              decoration:
+              const InputDecoration(
 
                 labelText:"Type",
 
@@ -112,65 +240,45 @@ class _CreateConfigScreenState
 
                   value:e,
 
-                  child:Text(e),
+                  child:
+                  Text(e),
 
                 );
 
               }).toList(),
 
 
+
               onChanged:(v){
 
                 setState((){
 
-                  type=v.toString();
+                  type =
+                  v.toString();
 
                 });
 
               },
 
-
             ),
-
 
 
             const SizedBox(height:15),
 
 
+            field(host,"Host"),
 
-            _field(
-              hostController,
-              "Host"
-            ),
+            field(port,"Port"),
 
+            field(username,"Username"),
 
-            _field(
-              portController,
-              "Port"
-            ),
+            field(password,"Password"),
 
-
-            _field(
-              userController,
-              "Username"
-            ),
-
-
-            _field(
-              passController,
-              "Password"
-            ),
+            field(sni,"SNI Domain"),
 
 
 
-            _field(
-              sniController,
-              "SNI Domain"
-            ),
-
-
-
-            CheckboxListTile(
+            SwitchListTile(
 
               title:
               const Text(
@@ -179,12 +287,11 @@ class _CreateConfigScreenState
 
               value:payload,
 
-
               onChanged:(v){
 
                 setState((){
 
-                  payload=v!;
+                  payload=v;
 
                 });
 
@@ -196,15 +303,15 @@ class _CreateConfigScreenState
 
             if(payload)
 
-              _field(
-                payloadController,
+              field(
+                payloadText,
                 "Payload"
               ),
 
 
 
 
-            CheckboxListTile(
+            SwitchListTile(
 
               title:
               const Text(
@@ -213,12 +320,11 @@ class _CreateConfigScreenState
 
               value:proxy,
 
-
               onChanged:(v){
 
                 setState((){
 
-                  proxy=v!;
+                  proxy=v;
 
                 });
 
@@ -230,11 +336,10 @@ class _CreateConfigScreenState
 
             if(proxy)
 
-              _field(
-                proxyController,
+              field(
+                proxyText,
                 "Proxy Host:Port"
               ),
-
 
 
 
@@ -244,62 +349,7 @@ class _CreateConfigScreenState
 
             ElevatedButton(
 
-              onPressed:(){
-
-                final config =
-                ConfigModel(
-
-                  id:
-                  DateTime.now()
-                  .millisecondsSinceEpoch
-                  .toString(),
-
-                  name:
-                  nameController.text,
-
-                  type:type,
-
-                  host:
-                  hostController.text,
-
-                  port:
-                  portController.text,
-
-                  username:
-                  userController.text,
-
-                  password:
-                  passController.text,
-
-                  sni:
-                  sniController.text,
-
-                  payloadEnabled:
-                  payload,
-
-                  payload:
-                  payloadController.text,
-
-                  proxyEnabled:
-                  proxy,
-
-                  proxy:
-                  proxyController.text,
-
-                  createdAt:
-                  DateTime.now(),
-
-                );
-
-
-                Navigator.pop(
-                  context,
-                  config
-                );
-
-
-              },
-
+              onPressed:save,
 
               child:
               const Text(
@@ -311,48 +361,16 @@ class _CreateConfigScreenState
 
           ],
 
+
         ),
 
+
       ),
+
 
     );
 
 
   }
-
-
-
-
-  Widget _field(
-      TextEditingController c,
-      String label
-      ){
-
-    return Padding(
-
-      padding:
-      const EdgeInsets.only(bottom:12),
-
-
-      child:TextField(
-
-        controller:c,
-
-        decoration:
-        InputDecoration(
-
-          labelText:label,
-
-          border:
-          const OutlineInputBorder(),
-
-        ),
-
-      ),
-
-    );
-
-  }
-
 
 }
